@@ -1,0 +1,32 @@
+body {
+    font-family: Times;
+    
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+p#title {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+div#sdcaption {
+    width: 1036px;
+    height: 41px;
+    background-color: #000000;
+    color: #ffffff;
+    opacity: 0.83;
+    
+    position: relative;
+    top: -45px;
+    
+    padding: 2px;
+}
+
+div#snakey {
+    width: 1040px;
+    height: 480px;
+    
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
