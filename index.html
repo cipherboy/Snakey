@@ -303,6 +303,7 @@
 
         this.bind = function() {
           this.unbind();
+          count = 0;
 
           $(document).on('tapstart', function(event) {
             event.preventDefault();
@@ -312,9 +313,17 @@
             event.preventDefault();
           });
 
-          $(document).on('doubletap', function(event) {
-            event.data.instance.game.end();
-            event.data.instance.show();
+          $(document).on('tap', { instance: this }, function(event) {
+            count = parseInt(count) + 1;
+            if (count > 1) {
+              event.data.instance.game.end();
+              event.data.instance.show();
+              count = 0;
+            }
+
+            setTimeout(function() {
+              count = 0;
+            }, 500);
           });
 
           $(document).on('keypress', { instance: this }, function(event) {
@@ -334,6 +343,7 @@
         this.unbind = function() {
           $(document).off('tapstart');
           $(document).off('tapend');
+          $(document).off('tap');
           $(document).off('keypress');
 
           for (var m in this.maps) {
@@ -655,7 +665,7 @@
             }
           });
 
-          $(document).on('singletap', { instance: this }, function(event) {
+          $(document).on('tap', { instance: this }, function(event) {
             if (event.data.instance.status == 2 || event.data.instance.status == 4) {
               event.data.instance.status = 3;
               $('#' + event.data.instance.telement).hide();
@@ -684,7 +694,6 @@
           $(document).off('swiperight');
           $(document).off('swipeup');
           $(document).off('swipedown');
-          $(document).off('singletap');
           $(window).off('blur');
         };
       }
@@ -754,7 +763,7 @@
         left: 0px;
 
         width: 100%;
-        height: 86%;
+        height: 83%;
 
         overflow-y: scroll;
       }
@@ -784,11 +793,11 @@
 
       div#smessage {
         position: absolute;
-        top: 95%;
+        top: 92%;
         left: 0px;
 
         width: 100%;
-        height: 5%;
+        height: 8%;
 
         border-top: 1px solid #222;
 

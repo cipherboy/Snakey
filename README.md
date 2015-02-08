@@ -1,6 +1,8 @@
 # Snakey
 A HTML5 Snakey game similar to GMail's Old Snakey
 
+[Try it](https://cipherboy.github.io/Snakey "Snakey via GitHub Pages")
+
 > Copyright (C) 2012, 2013, 2015 Alex Scheel
 > All rights reserved.
 > Licensed under BSD 2 Clause License:
