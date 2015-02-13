@@ -275,6 +275,7 @@ function Controller() {
       instance.game.map = instance.maps[instance.level];
       instance.game.osnake = instance.locations[instance.level];
       instance.game.init(instance.celement, instance.melement);
+      instance.game.bind();
       instance.game.start();
       $('#' + instance.oelement).hide();
     }, 100, this);
