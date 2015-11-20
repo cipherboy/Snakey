@@ -54,7 +54,7 @@
         overflow: hidden;
       }
 
-      canvas#scanvas {
+      canvas.scanvas {
         position: absolute;
         top: 0px;
         left: 0px;
@@ -150,7 +150,10 @@
   </head>
   <body>
     <div id="snakey">
-      <canvas id="scanvas" width="1872" height="864">
+      <canvas id="scanvas-background" class="scanvas" width="1872" height="864">
+        Your browser doesn't support HTML5 :(
+      </canvas>
+      <canvas id="scanvas-foreground" class="scanvas" width="1872" height="864">
         Your browser doesn't support HTML5 :(
       </canvas>
       <div id="soverlay">
@@ -160,7 +163,7 @@
     <script type="text/javascript">
       $(function () {
         ctrl = new Controller();
-        ctrl.init('scanvas', 'soverlay', 'smessage');
+        ctrl.init('scanvas-background', 'scanvas-foreground', 'soverlay', 'smessage');
       });
     </script>
   </body>

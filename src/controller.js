@@ -176,7 +176,8 @@ function Controller() {
     'Lizard',
   ];
 
-  this.celement;
+  this.belement;
+  this.felement;
   this.oelement;
   this.melement;
 
@@ -184,13 +185,14 @@ function Controller() {
 
   this.game;
 
-  this.init = function(canvas, overlay, messages) {
-    this.celement = canvas;
+  this.init = function(background, foreground, overlay, messages) {
+    this.felement = foreground;
+    this.belement = background;
     this.oelement = overlay;
     this.melement = messages;
 
     this.level = 0;
-    this.draw(this.celement, this.level, 36);
+    this.draw(this.belement, this.level, 36);
 
     this.show();
   };
@@ -249,15 +251,6 @@ function Controller() {
     }
     frame += ",f,c";
 
-    frame += "b,fs:#26e,";
-    for (var s in this.locations[map]) {
-      var c = parseInt(this.locations[map][s][0]);
-      var r = parseInt(this.locations[map][s][1]);
-
-      frame += 'm:' + (size*c + 1) + ':' + (size*r + 1) + ',r:' + (size*c + 1) + ':' + (size*r + 1) + ':' + (size-2) + ':' + (size-2) + ',';
-    }
-    frame += "f,c";
-
     jCanvasDraw(canvas, ctx, frame);
   };
 
@@ -266,7 +259,7 @@ function Controller() {
 
     delete this.game;
 
-    this.draw(this.celement, this.level, 36);
+    this.draw(this.belement, this.level, 36);
 
     $('#' + this.oelement).hide(0);
 
@@ -274,7 +267,7 @@ function Controller() {
       instance.game = new Snakey();
       instance.game.map = instance.maps[instance.level];
       instance.game.osnake = instance.locations[instance.level];
-      instance.game.init(instance.celement, instance.melement);
+      instance.game.init(instance.felement, instance.melement);
       instance.game.bind();
       instance.game.start();
       $('#' + instance.oelement).hide();
@@ -284,8 +277,6 @@ function Controller() {
   this.bind = function() {
     this.unbind();
     count = 0;
-
-    console.log('bind');
 
     $(document).on('tapstart', function(event) {
       event.preventDefault();
@@ -324,7 +315,6 @@ function Controller() {
   };
 
   this.unbind = function() {
-    console.log('unbind');
     $(document).off('tapstart');
     $(document).off('tapend');
     $(window).off('tap');

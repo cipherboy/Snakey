@@ -76,13 +76,16 @@ function Snakey() {
 
     var s1 = new Date().getTime();
     instance.key();
-    instance.move();
-    instance.collision();
-    instance.draw();
     var s2 = new Date().getTime();
+    instance.move();
+    var s3 = new Date().getTime();
+    instance.collision();
+    var s4 = new Date().getTime();
+    instance.draw();
+    var s5 = new Date().getTime();
 
     if (instance.status == 3) {
-      instance.timeout = setTimeout(instance.main, (450 / Math.pow(instance.score+1, 0.25)) - (s2 - s1), instance);
+      instance.timeout = setTimeout(instance.main, (450 / Math.pow(instance.score+1, 0.25)) - (s5 - s1), instance);
     }
   };
 
@@ -154,30 +157,17 @@ function Snakey() {
      * TODO: Change drawing to incremental versus entire screen.
      *       Not important as redraw is inexpensive.
     **/
-    var frame = "cs,b,fs:#e22,";
-    for (var r in this.map) {
-      for (var c in this.map[r]) {
-        var square = this.map[r][c];
-        c = parseInt(c);
-        r = parseInt(r);
-        if (square == 'R') {
-          frame += 'm:' + (this.ewidth*c + 2) + ':' + (this.eheight*r + 2) + ',r:' + (this.ewidth*c + 2) + ':' + (this.eheight*r + 2) + ':' + (this.ewidth-4) + ':' + (this.eheight-4) + ',';
-        }
-      }
-    }
-    frame += "f,c";
-
-    frame += "b,fs:#26e,";
+    var frame = "cs,b,fs:#26e,";
     for (var s in this.snake) {
       var c = parseInt(this.snake[s][0]);
       var r = parseInt(this.snake[s][1]);
 
-      frame += 'm:' + (this.ewidth*c + 2) + ':' + (this.eheight*r + 2) + ',r:' + (this.ewidth*c + 2) + ':' + (this.eheight*r + 2) + ':' + (this.ewidth-4) + ':' + (this.eheight-4) + ',';
+      frame += 'm:' + (this.ewidth*c + 1) + ':' + (this.eheight*r + 1) + ',r:' + (this.ewidth*c + 1) + ':' + (this.eheight*r + 1) + ':' + (this.ewidth-2) + ':' + (this.eheight-2) + ',';
     }
     frame += "f,c";
 
     frame += "b,fs:#282,";
-    frame += 'm:' + (this.ewidth*parseInt(this.food[0]) + 2) + ':' + (this.eheight*parseInt(this.food[1]) + 2) + ',r:' + (this.ewidth*parseInt(this.food[0]) + 2) + ':' + (this.eheight*parseInt(this.food[1]) + 2) + ':' + (this.ewidth-4) + ':' + (this.eheight-4) + ',';
+    frame += 'm:' + (this.ewidth*parseInt(this.food[0]) + 1) + ':' + (this.eheight*parseInt(this.food[1]) + 1) + ',r:' + (this.ewidth*parseInt(this.food[0]) + 1) + ':' + (this.eheight*parseInt(this.food[1]) + 1) + ':' + (this.ewidth-2) + ':' + (this.eheight-2) + ',';
     frame += "f,c";
 
     jCanvasDraw(this.canvas, this.ctx, frame);
