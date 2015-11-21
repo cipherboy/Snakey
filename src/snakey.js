@@ -90,17 +90,19 @@ function Snakey() {
 
     instance.frames += 1;
 
+    var expected = Math.ceil(750 / Math.log(instance.score+4));
+
     instance.timing[0] += (s5-s1);
-    instance.timing[1] += Math.floor(450 / Math.log(instance.score+3));
-    if (instance.last_timing !== 0) {
+    instance.timing[1] += expected;
+    if (instance.last_timing !== 0 && (s5 - instance.last_timing) < expected*3) {
       instance.timing[2] += (s5 - instance.last_timing);
     } else {
-      instance.timing[2] += s5 - s1;
+      instance.timing[2] += expected;
     }
     instance.last_timing = s5;
 
     if (instance.status == 3) {
-      instance.timeout = setTimeout(instance.main, Math.floor((450 / Math.log(instance.score+3)) - (instance.timing[0]/instance.frames) - ((instance.timing[2] - instance.timing[1])/instance.frames)), instance);
+      instance.timeout = setTimeout(instance.main, expected - (instance.timing[0]/instance.frames) - ((instance.timing[2] - instance.timing[1])/instance.frames), instance);
     }
   };
 
@@ -280,6 +282,7 @@ function Snakey() {
           event.data.instance.unbind();
           event.data.instance.start();
         } else if (event.which >= 37 && event.which <= 40) {
+          console.log(event.data.instance.status);
           /**
            * 0 - 37 - Left
            * 1 - 38 - Up
@@ -299,35 +302,7 @@ function Snakey() {
       }
     });
 
-    $(document).on('swipeleft', { instance: this }, function(event) {
-      if (event.data.instance.status == 3) {
-        event.data.instance.keystates.push(0);
-        event.preventDefault();
-      }
-    });
-
-    $(document).on('swiperight', { instance: this }, function(event) {
-      if (event.data.instance.status == 3) {
-        event.data.instance.keystates.push(2);
-        event.preventDefault();
-      }
-    });
-
-    $(document).on('swipeup', { instance: this }, function(event) {
-      if (event.data.instance.status == 3) {
-        event.data.instance.keystates.push(1);
-        event.preventDefault();
-      }
-    });
-
-    $(document).on('swipedown', { instance: this }, function(event) {
-      if (event.data.instance.status == 3) {
-        event.data.instance.keystates.push(3);
-        event.preventDefault();
-      }
-    });
-
-    $(document).on('tap', { instance: this }, function(event) {
+    $(document).on('click', { instance: this }, function(event) {
       if (event.data.instance.status == 2 || event.data.instance.status == 4) {
         event.data.instance.status = 3;
         $('#' + event.data.instance.telement).hide();
@@ -352,11 +327,7 @@ function Snakey() {
 
   this.unbind = function() {
     $(window).off('keydown');
-    $(document).off('swipeleft');
-    $(document).off('swiperight');
-    $(document).off('swipeup');
-    $(document).off('swipedown');
-    $(document).off('tap');
+    $(document).off('click');
     $(window).off('blur');
   };
 }

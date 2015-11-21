@@ -278,15 +278,7 @@ function Controller() {
     this.unbind();
     count = 0;
 
-    $(document).on('tapstart', function(event) {
-      event.preventDefault();
-    });
-
-    $(document).on('tapend', function(event) {
-      event.preventDefault();
-    });
-
-    $(window).on('tap', { instance: this }, function(event) {
+    $(document).on('click', { instance: this }, function(event) {
       count = parseInt(count) + 1;
       if (count > 1) {
         event.data.instance.game.end();
@@ -308,20 +300,18 @@ function Controller() {
 
 
     for (var m in this.maps) {
-      $(document).on('tap', '#' + this.oelement + '-map-' + m, { instance: this, map: m }, function(event) {
+      $(document).on('click', '#' + this.oelement + '-map-' + m, { instance: this, map: m }, function(event) {
         event.data.instance.start(event.data.map);
       });
     }
   };
 
   this.unbind = function() {
-    $(document).off('tapstart');
-    $(document).off('tapend');
-    $(window).off('tap');
+    $(document).off('click');
     $(document).off('keypress');
 
     for (var m in this.maps) {
-      $(document).off('tap', '#' + this.oelement + '-map-' + m);
+      $(document).off('click', '#' + this.oelement + '-map-' + m);
     }
   };
 }
