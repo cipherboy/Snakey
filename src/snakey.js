@@ -20,6 +20,10 @@ function Snakey() {
   this.eheight = 36;
   this.keystates = [];
 
+  this.timing = [0, 0, 0];
+  this.frames = 0;
+  this.last_timing = 0;
+
   this.thread = undefined;
 
   this.init = function(canvas, text) {
@@ -50,6 +54,9 @@ function Snakey() {
     this.direction = [1];
     this.keystates = [];
     this.food = this.empty();
+    this.timing = [0, 0, 0];
+    this.frames = 0;
+    this.last_timing = 0;
 
     this.score = 0;
 
@@ -76,16 +83,24 @@ function Snakey() {
 
     var s1 = new Date().getTime();
     instance.key();
-    var s2 = new Date().getTime();
     instance.move();
-    var s3 = new Date().getTime();
     instance.collision();
-    var s4 = new Date().getTime();
     instance.draw();
     var s5 = new Date().getTime();
 
+    instance.frames += 1;
+
+    instance.timing[0] += (s5-s1);
+    instance.timing[1] += Math.floor(450 / Math.log(instance.score+3));
+    if (instance.last_timing !== 0) {
+      instance.timing[2] += (s5 - instance.last_timing);
+    } else {
+      instance.timing[2] += s5 - s1;
+    }
+    instance.last_timing = s5;
+
     if (instance.status == 3) {
-      instance.timeout = setTimeout(instance.main, (450 / Math.pow(instance.score+1, 0.25)) - (s5 - s1), instance);
+      instance.timeout = setTimeout(instance.main, Math.floor((450 / Math.log(instance.score+3)) - (instance.timing[0]/instance.frames) - ((instance.timing[2] - instance.timing[1])/instance.frames)), instance);
     }
   };
 
@@ -106,20 +121,20 @@ function Snakey() {
   };
 
   this.move = function() {
-    if (this.status != 3) {
+    if (this.status !== 3) {
       return
     }
 
     var direction = this.direction.shift() % 4;
     var segment = 0;
 
-    if (direction == 0) {
+    if (direction === 0) {
       snakec = [[parseInt(this.snake[segment][0]) - 1, parseInt(this.snake[segment][1])]];
-    } else if (direction == 1) {
+    } else if (direction === 1) {
       snakec = [[parseInt(this.snake[segment][0]), parseInt(this.snake[segment][1]) - 1]];
-    } else if (direction == 2) {
+    } else if (direction === 2) {
       snakec = [[parseInt(this.snake[segment][0]) + 1, parseInt(this.snake[segment][1])]];
-    } else if (direction == 3) {
+    } else if (direction === 3) {
       snakec = [[parseInt(this.snake[segment][0]), parseInt(this.snake[segment][1]) + 1]];
     } else {
       alert (direction);
@@ -131,21 +146,19 @@ function Snakey() {
       }
     }
 
-    if (this.direction.length == 0) {
+    if (this.direction.length === 0) {
       this.direction.push(direction + 4);
     }
 
-
     food = false;
     for (var s in snakec) {
-      if (parseInt(snakec[s][0]) == parseInt(this.food[0]) && parseInt(snakec[s][1]) == parseInt(this.food[1])) {
+      if (parseInt(snakec[s][0]) === parseInt(this.food[0]) && parseInt(snakec[s][1]) === parseInt(this.food[1])) {
         food = true;
         break;
       }
     }
 
-
-    if (snakec.length > this.size && food == false) {
+    if (snakec.length > this.size && food === false) {
       snakec = snakec.slice(0, snakec.length-1);
     }
 
@@ -153,10 +166,6 @@ function Snakey() {
   };
 
   this.draw = function() {
-    /**
-     * TODO: Change drawing to incremental versus entire screen.
-     *       Not important as redraw is inexpensive.
-    **/
     var frame = "cs,b,fs:#26e,";
     for (var s in this.snake) {
       var c = parseInt(this.snake[s][0]);
@@ -178,7 +187,7 @@ function Snakey() {
       var segment = this.snake[s];
       c = parseInt(segment[0]);
       r = parseInt(segment[1]);
-      if (this.map[r][c] != ' ') {
+      if (this.map[r][c] !== ' ') {
         this.status = 5;
         this.end();
         return true;
@@ -186,14 +195,14 @@ function Snakey() {
 
       for (var z in this.snake) {
         var osegment = this.snake[z];
-        if (z != s && osegment[0] == segment[0] && osegment[1] == segment[1]) {
+        if (z !== s && osegment[0] == segment[0] && osegment[1] == segment[1]) {
           this.status = 5;
           this.end();
           return true;
         }
       }
 
-      if (c == this.food[0] && r == this.food[1]) {
+      if (c === this.food[0] && r === this.food[1]) {
         this.size += 1;
         this.score += 1;
         this.food = this.empty();
@@ -205,15 +214,15 @@ function Snakey() {
     var spaces = [];
     for (var r in this.map) {
       for (var c in this.map[r]) {
-        if (this.map[r][c] == ' ') {
+        if (this.map[r][c] === ' ') {
           var occupied = false;
           for (var s in this.snake) {
-            if (this.snake[s] == [c, r]) {
+            if (this.snake[s] === [c, r]) {
               occupied = true;
             }
           }
 
-          if (this.food == [c, r]) {
+          if (this.food === [c, r]) {
             occupied = true;
           }
 
